@@ -8,7 +8,7 @@ import numpy as np  # Numerical computing
 import sys  # System-specific parameters and functions
 from PIL import Image  # Python Imaging Library for image processing
 
-# Define hyperparameters for the neural network
+# Defining hyperparameters for the neural network
 batch_size = 64  # Number of samples processed in each training iteration
 learning_rate = 0.001  # Step size for gradient descent
 num_epochs = 10  # Number of complete passes through the training dataset
