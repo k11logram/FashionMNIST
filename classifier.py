@@ -22,23 +22,24 @@ download_dataset = False  # Don't download dataset (it should already be present
 
 # Try to load the FashionMNIST dataset
 try:
-    # Load training data with ToTensor transformation (converts images to normalized tensors)
+    # Load in training data with ToTensor transformation
     train_dataset = datasets.FashionMNIST(DATA_DIR, train=True, download=download_dataset, transform=transforms.ToTensor())
     # Load test data with the same transformation
     test_dataset = datasets.FashionMNIST(DATA_DIR, train=False, download=download_dataset, transform=transforms.ToTensor())
 except Exception as e:
-    # Handle any errors that occur during dataset loading
+    # Handling any errors that may occur during dataset loading
     print(f"Error loading dataset: {e}")
     print("Make sure the FashionMNIST folder is in the current directory.")
     sys.exit(1)  # Exit with error code
 
-# Define class labels that correspond to the FashionMNIST dataset indices
+# Lets defining class labels that correspond to the FashionMNIST dataset indices
 class_labels = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 
                 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
-# Split training data into training and validation sets
-train_size = int(0.8 * len(train_dataset))  # Use 80% for training
-val_size = len(train_dataset) - train_size  # Use 20% for validation
+# Spliting  training data into training and validation sets
+train_size = int(0.8 * len(train_dataset))  # lets use 80% for training
+val_size = len(train_dataset) - train_size  # use 20% for validation
+
 # Create random subsets for training and validation
 train_subset, val_subset = torch.utils.data.random_split(train_dataset, [train_size, val_size])
 
