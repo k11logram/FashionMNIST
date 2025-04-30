@@ -54,14 +54,7 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch
 # Define the neural network model for FashionMNIST classification
 class FashionMNISTClassifier(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
-        """
-        Initialize the neural network layers
-        
-        Args:
-            input_size: Size of input features (28*28 = 784)
-            hidden_size: Size of hidden layers
-            num_classes: Number of output classes (10)
-        """
+       
         super(FashionMNISTClassifier, self).__init__()  # Initialize the parent class
         self.flatten = nn.Flatten()  # Layer to flatten the input images
         
@@ -69,37 +62,29 @@ class FashionMNISTClassifier(nn.Module):
         self.model = nn.Sequential(
             nn.Linear(input_size, hidden_size),  # First linear layer: input_size -> hidden_size
             nn.ReLU(),  # ReLU activation function for non-linearity
-            nn.Dropout(0.2),  # Dropout with 20% probability to prevent overfitting
+            nn.Dropout(0.05),  # Dropout with 5% probability to prevent overfitting
             nn.Linear(hidden_size, hidden_size),  # Second linear layer: hidden_size -> hidden_size
             nn.ReLU(),  # ReLU activation for second layer
-            nn.Dropout(0.2),  # Dropout for second layer
-            nn.Linear(hidden_size, hidden_size),  # Second linear layer: hidden_size -> hidden_size
-            nn.ReLU(),  # ReLU activation for second layer
-            nn.Dropout(0.2),  # Dropout for second layer
-            nn.Linear(hidden_size, hidden_size),  # Second linear layer: hidden_size -> hidden_size
-            nn.ReLU(),  # ReLU activation for second layer
-            nn.Dropout(0.2),  # Dropout for second layer
-            nn.Linear(hidden_size, hidden_size),  # Second linear layer: hidden_size -> hidden_size
-            nn.ReLU(),  # ReLU activation for second layer
-            nn.Dropout(0.2),  # Dropout for second layer
+            nn.Dropout(0.05),  # Dropout for second layer
+            nn.Linear(hidden_size, hidden_size),  # Third linear layer: hidden_size -> hidden_size
+            nn.ReLU(),  # ReLU activation for third layer
+            nn.Dropout(0.05),  # Dropout for third layer
+            nn.Linear(hidden_size, hidden_size),  # forth linear layer: hidden_size -> hidden_size
+            nn.ReLU(),  # ReLU activation for forth layer
+            nn.Dropout(0.05),  # Dropout for second layer
+            nn.Linear(hidden_size, hidden_size),  # fifth linear layer: hidden_size -> hidden_size
+            nn.ReLU(),  # ReLU activation for fifth layer
+            nn.Dropout(0.05),  # Dropout for fifth layer
             nn.Linear(hidden_size, num_classes)  # Output layer: hidden_size -> num_classes
         )
     
     def forward(self, x):
-        """
-        Forward pass through the network
-        
-        Args:
-            x: Input tensor of shape [batch_size, 1, 28, 28]
-            
-        Returns:
-            Output tensor of shape [batch_size, num_classes]
-        """
+       
         x = self.flatten(x)  # Flatten input from [batch_size, 1, 28, 28] to [batch_size, 784]
         return self.model(x)  # Pass through the sequential model
 
-# Set the device to GPU if available, otherwise use CPU
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# Set the device to use CPU
+device = torch.device( 'cpu')
 # Initialize the model and move it to the selected device
 model = FashionMNISTClassifier(input_size, hidden_size, num_classes).to(device)
 # Define the loss function (Cross Entropy Loss is standard for classification)
