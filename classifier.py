@@ -9,11 +9,11 @@ import sys  # System-specific parameters and functions
 from PIL import Image  # Python Imaging Library for image processing
 
 # Defining hyperparameters for the neural network
-batch_size = 64  # Number of samples processed in each training iteration
+batch_size = 32  # Number of samples processed in each training iteration
 learning_rate = 0.001  # Step size for gradient descent
-num_epochs = 10  # Number of complete passes through the training dataset
+num_epochs = 5  # Number of complete passes through the training dataset
 input_size = 28 * 28  # Size of input images (28x28 pixels flattened)
-hidden_size = 128  # Number of neurons in hidden layers
+hidden_size = 16  # Number of neurons in hidden layers
 num_classes = 10  # Number of output classes (10 fashion categories)
 
 # Define directory where the dataset is stored
@@ -29,7 +29,7 @@ try:
 except Exception as e:
     # Handling any errors that may occur during dataset loading
     print(f"Error loading dataset: {e}")
-    print("Make sure the FashionMNIST folder is in the current directory.")
+    print("Making sure the FashionMNIST folder is in the current directory.")
     sys.exit(1)  # Exit with error code
 
 # Lets defining class labels that correspond to the FashionMNIST dataset indices
@@ -70,6 +70,15 @@ class FashionMNISTClassifier(nn.Module):
             nn.Linear(input_size, hidden_size),  # First linear layer: input_size -> hidden_size
             nn.ReLU(),  # ReLU activation function for non-linearity
             nn.Dropout(0.2),  # Dropout with 20% probability to prevent overfitting
+            nn.Linear(hidden_size, hidden_size),  # Second linear layer: hidden_size -> hidden_size
+            nn.ReLU(),  # ReLU activation for second layer
+            nn.Dropout(0.2),  # Dropout for second layer
+            nn.Linear(hidden_size, hidden_size),  # Second linear layer: hidden_size -> hidden_size
+            nn.ReLU(),  # ReLU activation for second layer
+            nn.Dropout(0.2),  # Dropout for second layer
+            nn.Linear(hidden_size, hidden_size),  # Second linear layer: hidden_size -> hidden_size
+            nn.ReLU(),  # ReLU activation for second layer
+            nn.Dropout(0.2),  # Dropout for second layer
             nn.Linear(hidden_size, hidden_size),  # Second linear layer: hidden_size -> hidden_size
             nn.ReLU(),  # ReLU activation for second layer
             nn.Dropout(0.2),  # Dropout for second layer
