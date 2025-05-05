@@ -18,7 +18,7 @@ num_classes = 10  # Number of output classes (10 fashion categories)
 
 # Define directory where the dataset is stored
 DATA_DIR = "."  # Current directory
-download_dataset = False  # Don't download dataset (it should already be present)
+download_dataset = True  # Don't download dataset (it should already be present)
 
 # Try to load the FashionMNIST dataset
 try:
@@ -225,15 +225,15 @@ if __name__ == "__main__":
     train_model()
     
     # Interactive classification loop
-    while True:
+    #while True:
         # Get file path from user
-        file_path = input("Please enter a filepath: ")
+        #file_path = input("Please enter a filepath: ")
         
         # Check if user wants to exit
-        if file_path.lower() == 'exit':
-            print("Exiting...")
-            break
+        #if file_path.lower() == 'exit':
+            #print("Exiting...")
+            #break
         
         # Classify the image and print result
-        prediction = classify_image(file_path)
-        print(f"Classifier: {prediction}")
+        #prediction = classify_image(file_path)
+        #print(f"Classifier: {prediction}")
