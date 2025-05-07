@@ -10,11 +10,11 @@ import sys  # System-specific parameters and functions
 from PIL import Image  # Python Imaging Library for image processing
 
 # Defining hyperparameters for the neural network
-batch_size = 32  # Number of samples processed in each training iteration
-learning_rate = 0.001  # Step size for gradient descent
-num_epochs = 5  # Number of complete passes through the training dataset
+batch_size = 128  # Number of samples processed in each training iteration
+learning_rate = 0.008  # Step size for gradient descent
+num_epochs = 15  # Number of complete passes through the training dataset
 input_size = 28 * 28  # Size of input images (28x28 pixels flattened)
-hidden_size = 16  # Number of neurons in hidden layers
+hidden_size = 256  # Number of neurons in hidden layers
 num_classes = 10  # Number of output classes (10 fashion categories)
 
 # Ensure logs are stored in the same directory as the script
@@ -73,21 +73,27 @@ class FashionMNISTClassifier(nn.Module):
         # Define the neural network layers as a sequential model
         self.model = nn.Sequential(
             nn.Linear(input_size, hidden_size),  # First linear layer: input_size -> hidden_size
+            nn.BatchNorm1d(hidden_size),  # Batch normalization for stability
             nn.ReLU(),  # ReLU activation function for non-linearity
-            nn.Dropout(0.05),  # Dropout with 5% probability to prevent overfitting
+            nn.Dropout(0.2),  # Increased dropout to prevent overfitting
+            
             nn.Linear(hidden_size, hidden_size),  # Second linear layer: hidden_size -> hidden_size
-            nn.ReLU(),  # ReLU activation for second layer
-            nn.Dropout(0.05),  # Dropout for second layer
-            nn.Linear(hidden_size, hidden_size),  # Third linear layer: hidden_size -> hidden_size
-            nn.ReLU(),  # ReLU activation for third layer
-            nn.Dropout(0.05),  # Dropout for third layer
-            nn.Linear(hidden_size, hidden_size),  # forth linear layer: hidden_size -> hidden_size
-            nn.ReLU(),  # ReLU activation for forth layer
-            nn.Dropout(0.05),  # Dropout for second layer
-            nn.Linear(hidden_size, hidden_size),  # fifth linear layer: hidden_size -> hidden_size
-            nn.ReLU(),  # ReLU activation for fifth layer
-            nn.Dropout(0.05),  # Dropout for fifth layer
-            nn.Linear(hidden_size, num_classes)  # Output layer: hidden_size -> num_classes
+            nn.BatchNorm1d(hidden_size),  # Batch normalization
+            nn.ReLU(),  # ReLU activation
+            nn.Dropout(0.2),  # Dropout
+            
+            nn.Linear(hidden_size, hidden_size // 2),  # Third layer with narrowing (hidden_size -> hidden_size/2)
+            nn.BatchNorm1d(hidden_size // 2),  # Batch normalization
+            nn.ReLU(),  # ReLU activation
+            nn.Dropout(0.2),  # Dropout
+            
+            nn.Linear(hidden_size // 2, hidden_size // 4),  # Fourth layer with further narrowing
+            nn.BatchNorm1d(hidden_size // 4),  # Batch normalization
+            nn.ReLU(),  # ReLU activation
+            nn.Dropout(0.1),  # Lower dropout near output
+            
+            nn.Linear(hidden_size // 4, num_classes)
+           # Output layer: hidden_size -> num_classes
         )
     
     def forward(self, x):
