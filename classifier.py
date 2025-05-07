@@ -1,4 +1,5 @@
 # Import necessary libraries
+import os
 import torch  # PyTorch deep learning framework
 import torch.nn as nn  # Neural network module
 import torch.optim as optim  # Optimization algorithms
@@ -15,6 +16,17 @@ num_epochs = 5  # Number of complete passes through the training dataset
 input_size = 28 * 28  # Size of input images (28x28 pixels flattened)
 hidden_size = 16  # Number of neurons in hidden layers
 num_classes = 10  # Number of output classes (10 fashion categories)
+
+# Ensure logs are stored in the same directory as the script
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+if not SCRIPT_DIR:  # If running the script directly without path
+    SCRIPT_DIR = os.getcwd()
+LOG_FILE_PATH = os.path.join(SCRIPT_DIR, "log.txt")
+MODEL_PATH = os.path.join(SCRIPT_DIR, "fashion_mnist_model.pth")
+
+print(f"Script directory: {SCRIPT_DIR}")
+print(f"Log file will be saved at: {LOG_FILE_PATH}")
+print(f"Model will be saved at: {MODEL_PATH}")
 
 # Define directory where the dataset is stored
 DATA_DIR = "."  # Current directory
@@ -98,8 +110,12 @@ def train_model():
     Train the neural network model on the FashionMNIST dataset
     """
     print("Training started...")
-    # Open a log file to record training progress
-    log_file = open("log.txt", "w")
+    
+    # Open the log file in write mode
+    with open(LOG_FILE_PATH, "w") as log_file:
+        log_file.write("Training Log\n")
+        log_file.write("Training Log "+str(batch_size)+" "+str(num_classes)+" "+str(learning_rate)+" "+str(hidden_size))
+        log_file.write("===========\n\n")
     
     # Loop through each epoch
     for epoch in range(num_epochs):
@@ -127,24 +143,32 @@ def train_model():
         
         # Calculate average loss for this epoch
         epoch_loss = running_loss / len(train_loader)
-        # Print and log epoch results
+        
+        # Print epoch results
         print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {epoch_loss:.4f}')
-        log_file.write(f'Epoch [{epoch+1}/{num_epochs}], Loss: {epoch_loss:.4f}\n')
         
         # Calculate validation accuracy for this epoch
         val_accuracy = evaluate_model(val_loader)
         print(f'Validation Accuracy: {val_accuracy:.2f}%')
-        log_file.write(f'Validation Accuracy: {val_accuracy:.2f}%\n')
+        
+        # Append to log file
+        with open(LOG_FILE_PATH, "a") as log_file:
+            log_file.write(f'Epoch [{epoch+1}/{num_epochs}], Loss: {epoch_loss:.4f}\n')
+            log_file.write(f'Validation Accuracy: {val_accuracy:.2f}%\n\n')
     
     # Calculate final test accuracy
     test_accuracy = evaluate_model(test_loader)
     print(f'Test Accuracy: {test_accuracy:.2f}%')
-    log_file.write(f'Test Accuracy: {test_accuracy:.2f}%\n')
-    log_file.close()  # Close the log file
+    
+    # Append final test accuracy to log
+    with open(LOG_FILE_PATH, "a") as log_file:
+        log_file.write(f'Final Test Accuracy: {test_accuracy:.2f}%\n')
     
     # Save the trained model to disk
-    torch.save(model.state_dict(), 'fashion_mnist_model.pth')
-    print("Done!")
+    torch.save(model.state_dict(), MODEL_PATH)
+    print(f"Training completed! Log saved to {LOG_FILE_PATH}")
+    print(f"Model saved to {MODEL_PATH}")
+
 
 # Function to evaluate the model on a given dataset
 def evaluate_model(data_loader):
@@ -225,15 +249,15 @@ if __name__ == "__main__":
     train_model()
     
     # Interactive classification loop
-    #while True:
+    while True:
         # Get file path from user
-        #file_path = input("Please enter a filepath: ")
+        file_path = input("Please enter a filepath: ")
         
         # Check if user wants to exit
-        #if file_path.lower() == 'exit':
-            #print("Exiting...")
-            #break
+        if file_path.lower() == 'exit':
+            print("Exiting...")
+            break
         
-        # Classify the image and print result
-        #prediction = classify_image(file_path)
-        #print(f"Classifier: {prediction}")
+        #Classify the image and print result
+        prediction = classify_image(file_path)
+        print(f"Classifier: {prediction}")
